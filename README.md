@@ -212,6 +212,49 @@ while(number < 10)
 
 层次遍历：1 2 3 4 5 6 7 8
 
+**题目（22）：`静态绑定`**
+
+**静态绑定：绑定的是静态对象类型，发生在编译时。**
+
+```c++
+class A{
+    public:
+    virtual void test(){
+        cout << "A test" << endl;
+    }
+    void cnn(){
+        test();
+        cout << "CNN" << endl;
+    }
+};
+
+class B : public A{
+    public:
+    void test(){
+        cout << "B test" << endl;
+    }
+};
+
+int main(){
+   B b;
+   A a = (A) b;
+   a.cnn();   //A test    CNN
+}
+```
+
+**题目（23）：`动态绑定`**
+
+**动态绑定：绑定的是动态对象类型，发生在运行时。**
+
+满足3个条件：**有指针或引用**、**指针向上转型**、**虚函数**
+
+```c++
+   A* a = new B;
+   a->cnn();  //B test    CNN
+```
+
+
+
 **********************************************************
 `SLAM板块`
 ------- 
