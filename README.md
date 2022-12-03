@@ -264,9 +264,9 @@ int main(){
 
 文件描述符：open 函数的返回值，返回当前操作文件的句柄，后续通过文件描述符（文件句柄）来读文件或者写文件。
 ```
-int open(const char *pathname , int flags , mode_t mode);
-ssize_t read(int fd , void *buf , size_t count);
-ssize_t write (int fd,const void *buf ,size_count);
+int open(const char *pathname , int flags , mode_t mode);  //pathname ：文件路径名， flags: 模式, mode:在第二个参数中有O_CREAT(文件不存在，创建文件）时才作用
+ssize_t read(int fd , void *buf , size_t count);     //    fd:文件描述符 , buf:待写入数据缓存区,nbytes:要写入的字节数
+ssize_t write (int fd,const void *buf ,size_count);    
 ```
 
 **********************************************************
