@@ -253,7 +253,21 @@ int main(){
    a->cnn();  //B test    CNN
 ```
 
+**题目（24）：`什么是内存抖动（Thrashing）`**
 
+内存页面的频繁更换，导致整个系统的效率急剧下降这个现象称为内存抖动。
+抖动一般是内存分配算法不好，内存太小或者程序的算法不佳引起的页面频繁从内存调入调出。
+
+**题目（25）：`文件操作的唯一依据是什么？`**
+
+文件句柄。
+
+文件描述符：open 函数的返回值，返回当前操作文件的句柄，后续通过文件描述符（文件句柄）来读文件或者写文件。
+```
+int open(const char *pathname , int flags , mode_t mode);
+ssize_t read(int fd , void *buf , size_t count);
+ssize_t write (int fd,const void *buf ,size_count);
+```
 
 **********************************************************
 `SLAM板块`
