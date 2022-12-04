@@ -269,6 +269,51 @@ ssize_t read(int fd , void *buf , size_t count);     //    fd:文件描述符 , 
 ssize_t write (int fd,const void *buf ,size_count);    
 ```
 
+**题目（26）：`vector下标[]访问和赋值？`**
+
+- 和普通数组一样，直接使用下标访问时不作边界检查，可以访问到超出siaze或capacity大小甚至负数下标的值（默认输出0）。
+- 使用下标赋值时，不能是空的vector，同样，也不会边界检查，超出边界的值虽然可以访问，但是使用reserve()或者push_back时，之前超出边界的值不会随着拷贝到新的内存中。
+```C++
+    vector<int> vec(2);
+    cout << "size: " << vec.size() << endl;
+    cout << "cap: " << vec.capacity() << endl;
+    vec[0] = 1;
+    vec.at(1) = 2;
+    vec[2] = 3;  // 不报错
+    // vec.at(2) = 3;  // 报错 std::out_of_range
+
+    for(int i = 0; i < 5; i++)
+        cout << vec[i] << ' ';  // 可以访问超出当前size大小的下标对应的值
+```
+输出：
+```
+size: 2
+cap: 2
+1 2 3 0 0
+```
+
+**题目（27）：`vector []越界会有什么后果？`**
+
+如果不小心用 [] 访问了越界的索引，可能会覆盖掉别的变量导致程序行为异常，或是访问到操作系统未映射的区域导致奔溃。为了防止不小心越界，可以用 vec.at(i) 替代 a[i]，at 函数会检测索引 i 是否越界，如果他发现索引 i >= vec.size() 则会抛出异常 std::out_of_range 让程序提前终止（或者被 try-catch 捕获），配合任意一款调试器，就可以很快速地定位到出错点。
+不过 at 需要额外检测下标是否越界，虽然更安全方便调试，但和 [] 相比有一定性能损失。
+
+**题目（28）：`vector内存增长原理？`**
+
+以vector最常用的push_back为例，调用push_back时，若当前容量（capacity）已经不能够容纳新的元素，即此时capacity=size，那么vector会重新申请一块内存，把之前的内存里的元素拷贝到新的内存当中，然后把push_back的元素拷贝到新的内存中，最后要析构原有的vector并释放原有的内存。这个过程的效率是极低的，为了避免频繁的分配内存，C++每次申请内存一般都会成倍的增长，例如之前是4，那么重新申请后就是8，以此类推（不同编译器环境下增长的倍数不一定一样）。
+
+
+**题目（29）：`现代cmake和以前的cmake编译流程有什么区别？`**
+
+旧流程：
+1. mkidr build
+2. cd build
+3. cmake ..
+4. make
+
+现代cmake流程：
+1. cmake -B build
+2. cmake --build build
+
 **********************************************************
 `SLAM板块`
 ------- 
@@ -307,6 +352,41 @@ Perspective-n-Points, PnP(P3P)提供了一种解决方案,它是一种由3D-2D�
 **题目(6):`单目视觉slam的尺度不确定性是什么?`**
 
 单目视觉中,丢失了地图点的深度信息,通常经过对极几何(三角化)的方法恢复深度,地图点深度(d)与偏移(t)相关,地图点不同深度,则对应一个t值。同样的观测可以计算出无穷组d和t。导致了单目视觉的尺度不确定性。因此需要进行初始化来固定一个尺度,后面的计算都以该尺度为单位进行。
+
+**题目（7）：`slam性能评估中，绝对轨迹误差(APE)和相对位姿误差(RPE)的区别是什么？`**
+
+- 绝对轨迹误差直接计算相机位姿的真实值与SLAM系统的估计值之间的差，程序首先根据位姿的时间戳将真实值和估计值进行对齐， 然后计算每对位姿之间的差值， 并最终以图表的形
+式输出， 该标准非常适合于评估视觉 SLAM 系统的性能。
+
+- 相对位姿误差用于计算相同两个时间戳上的位姿变化量的差， 同样， 在用时间戳对齐之后， 真实位姿和估计位姿均每隔一段相同时间计算位姿的变化量， 然后对该变化量做差， 以获得相对位姿误差， 该标准适合于估计系统的漂移。
+
+参考链接：[APE和RPE原理](http://zhaoxuhui.top/blog/2021/05/14/APE-RPE-ATE-RTE-Mmetric-in-SLAM.html#2%E4%BD%8D%E5%A7%BF%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87)
+
+**题目（8）：`旋转矩阵左乘和右乘的区别？`**
+
+基于全局坐标系的旋转变换左乘旋转矩阵，基于自身坐标系的旋转变换右乘旋转矩阵。
+
+![image](https://user-images.githubusercontent.com/45970183/205473023-d83d316d-a3c3-473b-92c0-5ec1cde45b8c.png)
+
+**题目（9）：`vins-fusion图像特征点提取和跟踪用的是什么方法？`**
+
+- 特征点提取采用的是Shi Tomasi算法的角点检测，调用的是opencv中封装好的cv::goodFeaturesToTrack函数。
+参考链接：
+[Harris算法原理](https://blog.csdn.net/qq_40374812/article/details/116758378)
+[Shi Tomasi算法原理](https://blog.csdn.net/qq_40374812/article/details/117016214?ops_request_misc=&request_id=&biz_id=102&utm_term=Shi%20Tomasi&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-117016214.nonecase&spm=1018.2226.3001.4187)
+- 特征点跟踪采用的是LK光流法，调用的是opencv中封装好的cv::calcOpticalFlowPyrLK函数。
+参考链接：
+[LK光流法原理](https://zhuanlan.zhihu.com/p/105998058) [LK光流法实现](https://zhuanlan.zhihu.com/p/435949335)
+
+**题目（10）：`vins-fusion中对图像特征是如何存储的？`**
+
+![image](https://user-images.githubusercontent.com/45970183/205473099-9b704d49-13eb-407b-9b1e-ac007907ec39.png)
+
+从构造的角度看：
+- 首先由特征提取和光流跟踪等等方法得到了特征点信息xyz_uz_velocity
+- 由于是双目相机，所以加上camera_id组成pair进行区分
+- 将该pair和特征点的id组成featureFrame(map)（一张图像中的特征点有多个，用feature_id区分），map包含了同一时刻所有相机的特征点和对应关系
+- 根据不同时刻，将time和featureFrame组成pair存入featureBuf队列，用于后续求解位姿等。
 
 
 
