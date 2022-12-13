@@ -631,6 +631,9 @@ kd-tree简称k维树，是一种空间划分的数据结构。常被用于高维
 
 传统的minimum-snap算法中将传统的规划问题完全建模为一个QP问题，通过已有的QP处理器直接求解，但求解过程必定伴随着求取矩阵的逆的问题，对于计算机而言，求逆是代价比较大的一个事情，高飞对此进行了创新，可以通过以下的方法求解一个minimum-snap的闭式解，可以避免求逆问题：
 
+![image](https://github.com/Adamaser/Interview_Questions/blob/questions/1.jpeg)
+![image](https://github.com/Adamaser/Interview_Questions/blob/questions/2.jpeg)
+
 
 
 **********************************************************
