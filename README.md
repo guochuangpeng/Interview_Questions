@@ -623,7 +623,7 @@ kd-tree简称k维树，是一种空间划分的数据结构。常被用于高维
 
 **题目(17):`路径规划算法中怎么对不确定性进行建模？`**
 
-
+![image](https://github.com/Adamaser/Interview_Questions/blob/questions/modle_uncertainty.jpeg)
 
 
 **********************************************************
